@@ -26,6 +26,32 @@ export async function parseXLSX(file) {
     })
 }
 
+function checkLineOverlap(lineData, from_lat, from_lng, to_lat, to_lng) {
+    const offset = 0.0002
+
+    let newCoords = {
+        from_lat: from_lat,
+        from_lng: from_lng,
+        to_lat: to_lat,
+        to_lng: to_lng
+    }
+
+    for(let i = 0; i < lineData.length; i++) {
+        if (lineData[i].from_latitude === from_lat &&
+            lineData[i].from_longitude === from_lng &&
+            lineData[i].to_latitude === to_lat &&
+            lineData[i].to_longitude === to_lng
+        ) {
+            newCoords.from_lat = from_lat > to_lat ? from_lat - offset : from_lat + offset
+            newCoords.from_lng = from_lng > to_lng ? from_lng - offset : from_lng + offset
+            newCoords.to_lat = to_lat > from_lat ? to_lat + offset : to_lat - offset
+            newCoords.to_lng = to_lng > from_lng ? to_lng + offset : to_lng - offset
+        }
+    }
+
+    return newCoords
+}
+
 function processXLSX(buffer) {
     const workbook = xlsx.read(buffer)
     const busStore = useBusStore()
@@ -59,16 +85,22 @@ function processXLSX(buffer) {
     busStore.setBusData(busData)
 
     for(let i=0; i < workSheets['line'].length; i++) {
+        const coords = checkLineOverlap(lineData,
+            busStore.getBusById(workSheets['line'][i].from_bus).latitude,
+            busStore.getBusById(workSheets['line'][i].from_bus).longitude,
+            busStore.getBusById(workSheets['line'][i].to_bus).latitude,
+            busStore.getBusById(workSheets['line'][i].to_bus).longitude
+            )
 
         let newLine = {
             id: workSheets['line'][i].ID,
             name: workSheets['line'][i].name,
             from_bus: workSheets['line'][i].from_bus,
             to_bus: workSheets['line'][i].to_bus,
-            from_latitude: busStore.getBusById(workSheets['line'][i].from_bus).latitude,
-            from_longitude: busStore.getBusById(workSheets['line'][i].from_bus).longitude,
-            to_latitude: busStore.getBusById(workSheets['line'][i].to_bus).latitude,
-            to_longitude: busStore.getBusById(workSheets['line'][i].to_bus).longitude,
+            from_latitude: coords.from_lat,
+            from_longitude: coords.from_lng,
+            to_latitude: coords.to_lat,
+            to_longitude: coords.to_lng,
             from_P: workSheets['line'][i].from_P,
             to_P: workSheets['line'][i].to_P,
             from_Q: workSheets['line'][i].from_Q,
@@ -78,6 +110,5 @@ function processXLSX(buffer) {
 
         lineData.push(newLine)
     }
-
     busStore.setLineData(lineData)
 }

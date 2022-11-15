@@ -23,7 +23,6 @@
         lng: coords.value.longitude
       }))
 
-      console.log(googleMapsApiKey)
       const loader = new Loader({apiKey: googleMapsApiKey})
       const mapDiv = ref(null)
       let map = ref(null)
