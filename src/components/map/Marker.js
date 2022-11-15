@@ -27,12 +27,10 @@ export function generateLines(map, lineData) {
 }
 
 function createMarker(map, pos, busData) {
-    const details = '<h5>' + busData.name + '</h5>' +
+    const details = '<h5>' + + busData.id + ': ' + busData.name + '</h5>' +
                     '<p><b>P_mes:</b> ' + busData.P_mes + '</br>' +
                     '<b>Q_mes:</b> ' + busData.Q_mes + '</br>' +
-                    '<b>U_mes:</b> ' + busData.U_mes + '</p>' +
-                    '<p><b>p_nw:</b> ' + busData.p_mw + '</br>' +
-                    '<b>q_mvar:</b> ' + busData.q_mvar + '</p>';
+                    '<b>U_mes:</b> ' + busData.U_mes + '</p>'
 
     const marker = new google.maps.Marker({
         position: pos.value,
