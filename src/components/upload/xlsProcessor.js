@@ -5,12 +5,16 @@ import { useBusStore } from '@/stores/bus';
 const E_SHEETS = ["bus", "line", "bus_geodata", "res_bus_est"]
 
 const E_COLORS = {
-    RED: '#bb2200',
-    YELLOW: '#ddaa00',
-    GREEN: '#33aa00',
+    RED: '#fe0000',
+    YELLOW: '#fdfe02',
+    GREEN: '#0bff01',
+    BLUE: '#011efe',
+    MAGENTA: '#fe00f6',
     REDICON: 'location-48-red-small.png',
     YELLOWICON: 'location-48-yellow-small.png',
-    GREENICON: 'location-48-green-small.png'
+    GREENICON: 'location-48-green-small.png',
+    BLUEICON: 'location-48-blue-small.png',
+    MAGENTAICON: 'location-48-magenta-small.png',
   }
 
 export async function parseXLSX(file) {
@@ -66,6 +70,25 @@ function processXLSX(buffer) {
     }
 
     for(let i = 0; i < workSheets['bus'].length; i++) {
+        let busColor = E_COLORS.BLUEICON
+
+        switch (workSheets['bus'][i].Color) {
+            case 1:
+                busColor = E_COLORS.REDICON
+                break
+            case 2:
+                busColor = E_COLORS.YELLOWICON
+                break
+            case 3:
+                busColor = E_COLORS.GREENICON
+                break
+            case 4:
+                busColor = E_COLORS.MAGENTAICON
+                break
+            default:
+                busColor = E_COLORS.BLUEICON
+        }
+
         let newBus = {
             id: workSheets['bus'][i].ID,
             name: workSheets['bus'][i].name,
@@ -76,7 +99,7 @@ function processXLSX(buffer) {
             U_mes: workSheets['bus'][i].U_mes,
             p_mw: workSheets['res_bus_est'][i].p_mw,
             q_mvar: workSheets['res_bus_est'][i].q_mvar,
-            color: workSheets['bus'][i].Color == 1 ?  E_COLORS.REDICON: (workSheets['line'][i].Color == 2 ? E_COLORS.YELLOWICON : E_COLORS.GREENICON)
+            color: busColor
         }
 
         busData.push(newBus)
@@ -90,7 +113,26 @@ function processXLSX(buffer) {
             busStore.getBusById(workSheets['line'][i].from_bus).longitude,
             busStore.getBusById(workSheets['line'][i].to_bus).latitude,
             busStore.getBusById(workSheets['line'][i].to_bus).longitude
-            )
+        )
+
+        let lineColor = E_COLORS.BLUE
+
+        switch (workSheets['line'][i].Color) {
+            case 1:
+                lineColor = E_COLORS.RED
+                break
+            case 2:
+                lineColor = E_COLORS.YELLOW
+                break
+            case 3:
+                lineColor = E_COLORS.GREEN
+                break
+            case 4:
+                lineColor = E_COLORS.MAGENTA
+                break
+            default:
+                lineColor = E_COLORS.BLUE
+        }
 
         let newLine = {
             id: workSheets['line'][i].ID,
@@ -105,7 +147,7 @@ function processXLSX(buffer) {
             to_P: workSheets['line'][i].to_P,
             from_Q: workSheets['line'][i].from_Q,
             to_Q: workSheets['line'][i].to_Q,
-            color: workSheets['line'][i].Color == 1 ?  E_COLORS.RED: (workSheets['line'][i].Color == 2 ? E_COLORS.YELLOW : E_COLORS.GREEN)
+            color: lineColor
         }
 
         lineData.push(newLine)
