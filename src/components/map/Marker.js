@@ -27,7 +27,7 @@ export function generateLines(map, lineData) {
 }
 
 function createMarker(map, pos, busData) {
-    const details = '<h5>' + + busData.id + ': ' + busData.name + '</h5>' +
+    const details = '<h5>Bus #' + busData.id + ': ' + busData.name + '</h5>' +
                     '<p><b>P_mes:</b> ' + busData.P_mes + '</br>' +
                     '<b>Q_mes:</b> ' + busData.Q_mes + '</br>' +
                     '<b>U_mes:</b> ' + busData.U_mes + '</p>'
@@ -53,7 +53,7 @@ function createMarker(map, pos, busData) {
 }
 
 function createLine(map, lineFrom, lineTo, lineData) {
-  const details = '<h5>' + lineData.name + '</h5>' +
+  const details = '<h5>Line #' + lineData.id + ': ' + lineData.name + '</h5>' +
                   '<p><b>from_P:</b> ' + lineData.from_P + '</br>' +
                   '<b>to_P:</b> ' + lineData.to_P + '</br>' +
                   '<b>from_Q:</b> ' + lineData.from_Q + '</br>' +
