@@ -3,6 +3,23 @@ import { defineStore } from 'pinia'
 export const useBusStore = defineStore({
     id: 'bus',
     state: () => ({
+        coords: [
+            {
+                "id": 18,
+                "x": 47.5715121,
+                "y": 18.3903412
+            },
+            {
+                "id": 19,
+                "x": 47.4907066,
+                "y": 18.6358046,
+            },
+            {
+                "id": 20,
+                "x": 47.7223782,
+                "y": 18.731435,
+            },
+        ],
         buses: [
             {
                 "id": 18,
@@ -84,6 +101,9 @@ export const useBusStore = defineStore({
         ]
     }),
     actions: {
+        setCoordsData(input) {
+            this.coords = input
+        },
         setBusData(input) {
             this.buses = input
         },
@@ -92,6 +112,9 @@ export const useBusStore = defineStore({
         }
     },
     getters: {
+        getCoordsById: (state) => {
+            return (coordsId) => state.coords.find((coords) => coords.id === coordsId)
+          },
         getBusById: (state) => {
           return (busId) => state.buses.find((bus) => bus.id === busId)
         },

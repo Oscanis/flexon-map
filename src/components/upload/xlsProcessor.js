@@ -110,14 +110,28 @@ function processXLSX(buffer, conversion) {
     const busStore = useBusStore()
 
     let workSheets = {}
+    let coordsData = []
     let busData = []
     let lineData = []
 
+    //reading specified XLS sheets to json
     for (const sheetName of workbook.SheetNames) {
         if(E_SHEETS.includes(sheetName))
         workSheets[sheetName] = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
     }
 
+    //filling in coordsData
+    for(let i = 0; i < workSheets['bus_geodata'].length; i++) {
+        coordsData.push({
+            id: workSheets['bus_geodata'][i].ID,
+            x: workSheets['bus_geodata'][i].x,
+            y: workSheets['bus_geodata'][i].y
+        })
+    }
+    busStore.setCoordsData(coordsData)
+
+
+    //filling in busData
     for(let i = 0; i < workSheets['bus'].length; i++) {
         let busColor = E_COLORS.BLUEICON
 
@@ -139,9 +153,11 @@ function processXLSX(buffer, conversion) {
         }
 
         let coords = {
-            x: workSheets['bus_geodata'][i].x,
-            y: workSheets['bus_geodata'][i].y
+            x: busStore.getCoordsById(workSheets['bus'][i].ID).x,
+            y: busStore.getCoordsById(workSheets['bus'][i].ID).y
         }
+
+        console.log(coords)
 
         if (conversion) coords = eov2wgs84(coords)
 
@@ -163,6 +179,7 @@ function processXLSX(buffer, conversion) {
     
     busStore.setBusData(busData)
 
+    //filling in lineData
     for(let i=0; i < workSheets['line'].length; i++) {
         const coords = checkLineOverlap(lineData,
             busStore.getBusById(workSheets['line'][i].from_bus).latitude,
