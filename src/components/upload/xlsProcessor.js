@@ -157,8 +157,6 @@ function processXLSX(buffer, conversion) {
             y: busStore.getCoordsById(workSheets['bus'][i].ID).y
         }
 
-        console.log(coords)
-
         if (conversion) coords = eov2wgs84(coords)
 
         let newBus = {
