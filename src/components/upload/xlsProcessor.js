@@ -2,7 +2,7 @@
 const xlsx = require('xlsx')
 import { useBusStore } from '@/stores/bus';
 
-const E_SHEETS = ["bus", "line", "bus_geodata", "res_bus_est"]
+const E_SHEETS = ["bus", "line", "bus_geodata"]
 
 const E_COLORS = {
     RED: '#fe0000',
@@ -167,8 +167,6 @@ function processXLSX(buffer, conversion) {
             P_mes: workSheets['bus'][i].P_mes,
             Q_mes: workSheets['bus'][i].Q_mes,
             U_mes: workSheets['bus'][i].U_mes,
-            p_mw: workSheets['res_bus_est'][i].p_mw,
-            q_mvar: workSheets['res_bus_est'][i].q_mvar,
             color: busColor
         }
 
@@ -224,4 +222,7 @@ function processXLSX(buffer, conversion) {
         lineData.push(newLine)
     }
     busStore.setLineData(lineData)
+
+    console.log(busStore.getBusById(58))
+    console.log(busStore.getBusById(459))
 }

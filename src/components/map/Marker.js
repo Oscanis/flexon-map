@@ -54,6 +54,8 @@ function createMarker(map, pos, busData) {
 
 function createLine(map, lineFrom, lineTo, lineData) {
   const details = '<h5>Line #' + lineData.id + ': ' + lineData.name + '</h5>' +
+                  '<p><b>from Bus:</b> ' + lineData.from_bus + '</br>' +
+                  '<b>to Bus:</b> ' + lineData.to_bus + '</p>' +
                   '<p><b>from_P:</b> ' + lineData.from_P + '</br>' +
                   '<b>to_P:</b> ' + lineData.to_P + '</br>' +
                   '<b>from_Q:</b> ' + lineData.from_Q + '</br>' +
